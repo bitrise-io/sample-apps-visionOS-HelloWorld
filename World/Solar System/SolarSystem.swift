@@ -29,6 +29,10 @@ struct SolarSystem: View {
         }
         .onAppear {
             model.isShowingSolar = true
+            var announcement = AttributedString(localized: "Entered the immersive star filled solar system!",
+                                                comment: "Accessibility message describing the model shown.")
+            announcement.accessibilitySpeechAnnouncementPriority = .high
+            AccessibilityNotification.Announcement(announcement).post()
         }
         .onDisappear {
             model.isShowingSolar = false

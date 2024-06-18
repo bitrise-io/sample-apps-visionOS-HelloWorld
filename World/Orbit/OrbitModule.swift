@@ -15,7 +15,16 @@ private let modelDepth: Double = 200
 private enum Item: String, CaseIterable, Identifiable {
     case satellite, moon, telescope
     var id: Self { self }
-    var name: String { rawValue.capitalized }
+    var name: String {
+        switch self {
+        case .satellite:
+            String(localized: "Satellite", comment: "An object in orbit around Earth.")
+        case .moon:
+            String(localized: "Moon", comment: "An object in orbit around Earth.")
+        case .telescope:
+            String(localized: "Telescope", comment: "A space telescope in orbit around Earth.")
+        }
+    }
 }
 
 /// The module detail content that's specific to the orbit module.
@@ -31,7 +40,7 @@ struct OrbitModule: View {
                         .opacity(selection == .satellite ? 1 : 0)
                 }
                 .overlay {
-                    ItemView(item: .moon)
+                    ItemView(item: .moon, orientation: [0, .pi, 0])
                         .opacity(selection == .moon ? 1 : 0)
                 }
                 .overlay {
@@ -47,6 +56,7 @@ struct OrbitModule: View {
                 }
             }
             .pickerStyle(.segmented)
+            .accessibilitySortPriority(0)
             .frame(width: 350)
         }
     }
@@ -58,7 +68,7 @@ private struct ItemView: View {
     var orientation: SIMD3<Double> = .zero
 
     var body: some View {
-        Model3D(named: item.name, bundle: worldAssetsBundle) { model in
+        Model3D(named: item.rawValue.capitalized, bundle: worldAssetsBundle) { model in
             model.resizable()
                 .scaledToFit()
                 .rotation3DEffect(
@@ -68,6 +78,7 @@ private struct ItemView: View {
                 )
                 .frame(depth: modelDepth)
                 .offset(z: -modelDepth / 2)
+                .accessibilitySortPriority(1)
         } placeholder: {
             ProgressView()
                 .offset(z: -modelDepth * 0.75)
@@ -78,6 +89,5 @@ private struct ItemView: View {
 #Preview {
     OrbitModule()
         .padding()
-        .glassBackgroundEffect()
         .environment(ViewModel())
 }

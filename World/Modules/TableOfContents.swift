@@ -17,6 +17,7 @@ struct TableOfContents: View {
         VStack {
             Image("SunSliver")
                 .opacity(model.isTitleFinished ? 1 : 0)
+                .accessibility(hidden: true)
 
             Spacer(minLength: 120)
 
@@ -30,21 +31,22 @@ struct TableOfContents: View {
                         TitleText(title: model.titleText)
                             .padding(.leading, 70)
                     }
-                Text("Discover a new way of looking at the world.")
+                Text("Discover a new way of looking at the world.",
+                     comment: "The app's subtitle, appearing immediately below the title in a smaller font, on the splash screen.")
                     .font(.title)
                     .opacity(model.isTitleFinished ? 1 : 0)
             }
             .alignmentGuide(.earthGuide) { context in
                 context[VerticalAlignment.top]
             }
-            .padding(.bottom, 40)
+            .padding(.bottom, 24)
 
             HStack(alignment: .top, spacing: 30) {
                 ForEach(Module.allCases) {
                     ModuleCard(module: $0)
                 }
             }
-            .padding(.bottom, 50)
+            .padding(.bottom, 8)
             .opacity(model.isTitleFinished ? 1 : 0)
 
             Spacer()
@@ -61,6 +63,7 @@ struct TableOfContents: View {
                     context[VerticalAlignment.top] + 100
                 }
                 .opacity(model.isTitleFinished ? 1 : 0)
+                .accessibility(hidden: true)
         }
         .animation(.default.speed(0.25), value: model.isTitleFinished)
     }
